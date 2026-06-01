@@ -17,20 +17,17 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk \
           libffi-dev libssl-dev autoconf libtool pkg-config \
-          zlib1g-dev cmake
-        pip install buildozer cython
+          zlib1g-dev cmake build-essential
+        pip install buildozer==1.5.0 cython==0.29.36
 
     - name: Accept Android licenses
       run: |
         mkdir -p $HOME/.android
         touch $HOME/.android/repositories.cfg
         yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses || true
-        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33" || true
 
     - name: Build APK
       run: |
-        export ANDROIDAPI=33
-        export ANDROIDMINAPI=21
         yes | buildozer android debug 2>&1
 
     - name: Upload APK
